@@ -1,0 +1,48 @@
+{
+  "owner" : "admin",
+  "tableType" : "MANAGED_TABLE",
+  "dataColumns" : [ {
+    "name" : "custkey",
+    "type" : "bigint"
+  }, {
+    "name" : "name",
+    "type" : "varchar(25)"
+  }, {
+    "name" : "address",
+    "type" : "varchar(40)"
+  }, {
+    "name" : "nationkey",
+    "type" : "bigint"
+  }, {
+    "name" : "phone",
+    "type" : "varchar(15)"
+  }, {
+    "name" : "acctbal",
+    "type" : "double"
+  }, {
+    "name" : "mktsegment",
+    "type" : "varchar(10)"
+  }, {
+    "name" : "comment",
+    "type" : "varchar(117)"
+  } ],
+  "partitionColumns" : [ ],
+  "parameters" : {
+    "presto_version" : "0.293-2f48ff6",
+    "presto_query_id" : "20250808_140946_00038_cfn7u",
+    "numFiles" : "1",
+    "numRows" : "150000",
+    "rawDataSize" : "28733765",
+    "totalSize" : "24970392"
+  },
+  "storageFormat" : {
+    "serDe" : "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+    "inputFormat" : "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+    "outputFormat" : "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+  },
+  "storageParameters" : {
+    "preferred_ordering_columns" : ""
+  },
+  "serdeParameters" : { },
+  "columnStatistics" : { }
+}

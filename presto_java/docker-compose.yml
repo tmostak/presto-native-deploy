@@ -1,0 +1,58 @@
+services:
+  presto:
+    image: prestodb/presto:latest
+    ports:
+      - "8090:8090"
+    tty: true
+    stdin_open: true
+    mem_limit: 16gb
+    shm_size: 2g
+    volumes:
+      - ./presto_config/config.properties:/opt/presto-server/etc/config.properties:ro
+      - ./presto_config/jvm.config:/opt/presto-server/etc/jvm.config:ro
+      - ./catalog:/opt/presto-server/etc/catalog
+      - ./data:/opt/presto-server/data:rw
+      - /Users/tmostak/docker/hive_data:/opt/presto-server/hive_data:ro
+    # depends_on:
+    #   - tpch-generator
+
+  superset-db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: superset
+      POSTGRES_USER: superset
+      POSTGRES_PASSWORD: superset
+    volumes:
+      - superset_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  superset:
+    image: apache/superset:latest
+    ports:
+      - "8088:8088"
+    environment:
+      - SUPERSET_CONFIG_PATH=/app/superset_config.py
+      - SUPERSET_SECRET_KEY=your_secret_key_here
+      - DATABASE_DB=superset
+      - DATABASE_HOST=superset-db
+      - DATABASE_PASSWORD=superset
+      - DATABASE_USER=superset
+    volumes:
+      - ./superset_config.py:/app/superset_config.py:ro
+      - superset_logs:/app/logs
+    depends_on:
+      - superset-db
+      - presto
+    command: >
+      bash -c "
+        pip install pyhive[presto] psycopg2-binary &&
+        superset fab create-admin --username admin --firstname Admin --lastname User --email admin@superset.com --password admin &&
+        superset db upgrade &&
+        superset init &&
+        superset run -h 0.0.0.0 -p 8088
+      "
+    restart: unless-stopped
+
+volumes:
+  superset_db_data:
+  superset_logs:
